@@ -259,7 +259,7 @@ CALL deposit(1, 2000.00, 'Deposit');
 -- BEGIN
 --     IF NEW.transaction_type = 'credit_card_payment' THEN
 --         -- Fetch credit card limit
---         SELECT risk_limit INTO card_limit FROM accounts WHERE account_id = NEW.account_id;
+--         SELECT risk_limit INTO card_limit FROM customers WHERE account_id = NEW.account_id;
         
 --         -- Calculate total spent on this card
 --         SELECT COALESCE(SUM(amount), 0) INTO total_spent 
@@ -341,7 +341,7 @@ CALL deposit(1, 2000.00, 'Deposit');
 -- END;
 -- $$;
 
-
+CALL add_transaction('Muhammed Tekin Account', '1234567898765432', 'payment', 1000, 'Initial payment');
 CALL add_transaction('Muhammed Tekin Account', '1234567898765432', 'deposit', 1000, 'Initial deposit');
 
 select * from transactions;
