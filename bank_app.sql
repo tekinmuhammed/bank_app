@@ -77,7 +77,6 @@ CALL add_transaction(
 
 
 
-
 CREATE OR REPLACE PROCEDURE public.add_transaction(
     IN p_account_id INT,
     IN p_card_id INT,
@@ -135,10 +134,52 @@ $$;
 
 select * from transactions;
 
+CALL add_transaction(
+	1,
+	1,
+	1,
+	1500.00,
+	'deposit'
+);
+
+CALL add_transaction(
+	1,
+	1,
+	2,
+	1500.00,
+	'withdrawal'
+);
+
+CALL add_transaction(
+	1,
+	1,
+	2,
+	1500.00,
+	'withdrawal'
+);
+
+CALL add_transaction(
+	1,
+	2,
+	3,
+	1500.00,
+	'credit_card_payment'
+);
+
+CALL add_transaction(
+	1,
+	2,
+	7,
+	1500.00,
+	'transfer_to_credit_card'
+);
 
 
 select * from accounts;
 
+select * from cards;
+
+select * from customers;
 
 SELECT 
     iban, 
@@ -147,6 +188,16 @@ FROM
     accounts
 WHERE 
     iban = 'TR000000000000000000000001';
+
+
+
+SELECT 
+    card_number, 
+    risk_limit, 
+    current_balance, 
+    (risk_limit - current_balance) AS available_credit 
+FROM 
+    customers;
 
 CREATE OR REPLACE PROCEDURE public.add_transaction_type(p_transaction_type_name VARCHAR)
 LANGUAGE plpgsql
