@@ -168,9 +168,9 @@ CALL add_transaction(
 
 CALL add_transaction(
 	1,
-	2,
+	1,
 	7,
-	1500.00,
+	500.00,
 	'transfer_to_credit_card'
 );
 
