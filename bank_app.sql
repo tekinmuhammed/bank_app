@@ -77,7 +77,6 @@ CALL add_transaction(
 
 
 
-
 CREATE OR REPLACE PROCEDURE public.add_transaction(
     IN p_account_id INT,
     IN p_card_id INT,
@@ -135,10 +134,52 @@ $$;
 
 select * from transactions;
 
+CALL add_transaction(
+	1,
+	1,
+	1,
+	1500.00,
+	'deposit'
+);
+
+CALL add_transaction(
+	1,
+	1,
+	2,
+	1500.00,
+	'withdrawal'
+);
+
+CALL add_transaction(
+	1,
+	1,
+	2,
+	1500.00,
+	'withdrawal'
+);
+
+CALL add_transaction(
+	1,
+	2,
+	3,
+	1500.00,
+	'credit_card_payment'
+);
+
+CALL add_transaction(
+	1,
+	1,
+	7,
+	500.00,
+	'transfer_to_credit_card'
+);
 
 
 select * from accounts;
 
+select * from cards;
+
+select * from customers;
 
 SELECT 
     iban, 
@@ -147,6 +188,16 @@ FROM
     accounts
 WHERE 
     iban = 'TR000000000000000000000001';
+
+
+
+SELECT 
+    card_number, 
+    risk_limit, 
+    current_balance, 
+    (risk_limit - current_balance) AS available_credit 
+FROM 
+    customers;
 
 CREATE OR REPLACE PROCEDURE public.add_transaction_type(p_transaction_type_name VARCHAR)
 LANGUAGE plpgsql
@@ -159,3 +210,58 @@ BEGIN
     RAISE NOTICE 'Transaction type added successfully.';
 END $$;
 CALL public.add_transaction_type('transfer_to_credit_card');
+
+
+
+CREATE VIEW customer_account_overview AS
+SELECT 
+    c.customer_id,
+    c.full_name,
+    SUM(a.balance) AS total_balance,
+    c.risk_limit AS total_credit_limit,
+    COUNT(a.account_id) AS account_count
+FROM customers c
+JOIN accounts a ON c.customer_id = a.customer_id
+GROUP BY c.customer_id, c.full_name, c.risk_limit;
+
+select * from customer_account_overview;
+
+
+CREATE OR REPLACE VIEW account_transaction_summary AS
+SELECT 
+    a.account_id,
+    a.account_name,
+    COUNT(t.transaction_id) AS total_transactions,
+    SUM(t.amount) AS total_amount
+FROM accounts a
+JOIN transactions t ON a.account_id = t.account_id
+GROUP BY a.account_id, a.account_name;
+
+select * from account_transaction_summary;
+
+CREATE OR REPLACE VIEW credit_card_spending AS
+SELECT 
+    c.card_id,
+    ca.full_name,
+    c.card_number,
+    SUM(t.amount) AS total_spent
+FROM cards c
+JOIN transactions t ON c.card_id = t.card_id
+JOIN accounts a ON c.account_id = a.account_id
+JOIN customers ca ON a.customer_id = ca.customer_id
+WHERE c.card_type = 'credit'
+GROUP BY c.card_id, ca.full_name, c.card_number;
+
+select * from credit_card_spending;
+
+
+CREATE OR REPLACE VIEW account_balance_and_credit_limit AS
+SELECT 
+    a.account_id,
+    a.account_name,
+    a.balance AS account_balance,
+    c.risk_limit AS customer_credit_limit
+FROM accounts a
+JOIN customers c ON a.customer_id = c.customer_id;
+
+select * from account_balance_and_credit_limit;
