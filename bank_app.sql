@@ -1,13 +1,6 @@
 select * from customers;
 
 CALL add_customer(
-	'Muhammed Tekin',
-	'14464356542',
-	'Adıyaman',
-	'2000-01-01'
-);
-
-CALL add_customer(
 	'Gün Gören',
 	'11111111111',
 	'Eskişehir',
