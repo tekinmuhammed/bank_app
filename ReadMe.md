@@ -1,2 +1,2 @@
 # Bank Application
-Piton Technology Intern Task
+Piton Technology Banking Api
