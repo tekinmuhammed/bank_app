@@ -1,2 +1,2 @@
 # Bank Application
-Piton Technology Banking Api
+Piton Technology Banking Api Internship
