@@ -1,2 +1,2 @@
 # Bank Application
-Piton Technology Banking Api Internship
+Piton Technology bank-rdms internship task
