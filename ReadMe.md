@@ -1,2 +1,2 @@
 # Bank Application
-Piton Technology bank-rdms internship task
+Piton Technology Bank-RDMS internship task
